@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+
+  wekandb-dev:
+    image: mongo:4.4
+    container_name: wekan-dev-db
+    restart: unless-stopped
+    command: mongod --oplogSize 128
+    networks:
+      - wekan-dev-tier
+    expose:
+      - 27017
+    volumes:
+      - ./volumes/wekan-db:/data/db
+      - ./volumes/wekan-db-dump:/dump
+      - /etc/localtime:/etc/localtime:ro
+
+  wekan-dev:
+    container_name: wekan-dev-app
+    restart: always
+    networks:
+      - wekan-dev-tier
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - 3000:3000
+      - 9229:9229
+    environment:
+      - MONGO_URL=mongodb://wekandb-dev:27017/wekan
+      - ROOT_URL=http://localhost:3000
+      - WITH_API=true
+      - RICHER_CARD_COMMENT_EDITOR=true
+      - BROWSER_POLICY_ENABLED=true
+    depends_on:
+      - wekandb-dev
+    volumes:
+      - ../client:/home/wekan/app/client
+      - ../models:/home/wekan/app/models
+      - ../config:/home/wekan/app/config
+      - ../i18n:/home/wekan/app/i18n
+      - ../server:/home/wekan/app/server
+      - ../public:/home/wekan/app/public
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  wekan-dev-db:
+    driver: local
+  wekan-dev-db-dump:
+    driver: local
+
+networks:
+  wekan-dev-tier:
+    driver: bridge
