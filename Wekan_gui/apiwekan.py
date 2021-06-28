@@ -16,6 +16,7 @@ import json
 import requests
 import sys
 import ssl
+import logintk 
 
 ssl._create_default_https_context = ssl._create_unverified_context
 arguments = len(sys.argv) - 1
@@ -47,9 +48,22 @@ if arguments == 0:
 # Username is your Wekan username or email address.
 # OIDC/OAuth2 etc uses email address as username.
 
-username = 'antoine'
-password = 'ntri33'
+
+
+# username = 'antoine'
+# password = 'ntri33'
+
+
+username, password = logintk.login()
+
+print('username',username.get())
+print('password',password.get())
+
+
+username = username.get()
+password = password.get()
 wekanurl = 'http://localhost:8080/'
+
 
 # ------- SETTINGS END -------------
 
@@ -292,3 +306,4 @@ if arguments == 1:
         data2 = body.text.replace('}',"}\n")
         print(data2)
         # ------- LIST OF USERS END -----------
+
