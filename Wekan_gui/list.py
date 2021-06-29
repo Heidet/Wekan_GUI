@@ -9,6 +9,7 @@ from tkinter import ttk
 import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
+import apiwekan 
 
 
 # def selected_item():
@@ -47,11 +48,13 @@ def treeview_boards(ws, tree):
     tree.bind('<<TreeviewSelect>>', item_selected)
     tree.grid(row=0, column=0, sticky='nsew')
     data = []
-    dict = [{"_id":"PAcCMBTujxvYPqAR4","title":"toto"}
-            ,{"_id":"KEGYfNxSRDJ84eP6a","title":"tata"}
-            ,{"_id":"t5yce6vh6tKP7kAzc","title":"titi"}
-            ,{"_id":"vTd3gNRRZkLtRJ7J9","title":"tata"}
-        ]
+    # dict = [{"_id":"PAcCMBTujxvYPqAR4","title":"toto"}
+    #         ,{"_id":"KEGYfNxSRDJ84eP6a","title":"tata"}
+    #         ,{"_id":"t5yce6vh6tKP7kAzc","title":"titi"}
+    #         ,{"_id":"vTd3gNRRZkLtRJ7J9","title":"tata"}
+    #     ]
+    apiwekan.boards()
+    # print(data2)
 
     for key in dict:
         # print(key)

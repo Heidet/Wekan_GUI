@@ -223,11 +223,16 @@ def list(userid):
     return data2
 
 
-def boards(userid):
+def boards():
     # if arguments == 2:
     # userid = sys.argv[2]
-    print(userid)
+    print('useridboard =>', userid)
+    print('users =>', users)
+    print('s =>', s)
+    print('bs =>', bs)
+
     boards = users + s + userid + s + bs
+    print('boards', boards )
     # if sys.argv[1] == 'boards':
     headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
     #post_data = {'userId': '{}'.format(userid)}
@@ -286,7 +291,7 @@ def listattachments(userid):
     return data2
 
 
-def users():
+def userslist():
     # if arguments == 1:
     # if sys.argv[1] == 'users':
     headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
@@ -300,6 +305,6 @@ def users():
 
 
 if req.status_code == 200:
-    boards(userid)
+    boards()
 else:
     print ('Boo!')
