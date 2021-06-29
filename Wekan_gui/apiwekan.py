@@ -36,19 +36,7 @@ if arguments == 0:
     print("  python3 api.py addcard AUTHORID BOARDID SWIMLANEID LISTID CARDTITLE CARDDESCRIPTION")
     print("  python3 api.py editcard BOARDID LISTID CARDID NEWCARDTITLE NEWCARDDESCRIPTION")
     print("  python3 api.py listattachments BOARDID # List attachments")
-# TODO:
-#   print("  python3 api.py attachmentjson BOARDID ATTACHMENTID # One attachment as JSON base64")
-#   print("  python3 api.py attachmentbinary BOARDID ATTACHMENTID # One attachment as binary file")
-#   print("  python3 api.py attachmentdownload BOARDID ATTACHMENTID # One attachment as file")
-#   print("  python3 api.py attachmentsdownload BOARDID # All attachments as files")
     exit
-
-# ------- SETTINGS START -------------
-
-# Username is your Wekan username or email address.
-# OIDC/OAuth2 etc uses email address as username.
-
-
 
 # username = 'antoine'
 # password = 'ntri33'
@@ -56,9 +44,8 @@ if arguments == 0:
 
 username, password = logintk.login()
 
-print('username',username.get())
-print('password',password.get())
-
+# print('username',username.get())
+# print('password',password.get())
 
 username = username.get()
 password = password.get()
@@ -158,152 +145,161 @@ users = wekanurl + apiusers
 # ------- LOGIN TOKEN START -----------
 
 data = {"username": username, "password": password}
-body = requests.post(wekanloginurl, data=data,  verify=False)
-print('body => ',body)
-d = body.json()
-print('d => ',d)
+req = requests.post(wekanloginurl, data=data,  verify=False)
+print('body => ',req)
+d = req.json()
+userid = list(d.values())[0]   
 apikey = d['token']
+print('dico login =>',d)
+print('userid =>', userid)
 print('apikey =>',apikey)
 
 # ------- LOGIN TOKEN END -----------
 
-if arguments == 7:
+def addcard(userid):
+    # if arguments == 7:
+    # if sys.argv[1] == 'addcard':
 
-    if sys.argv[1] == 'addcard':
-        # ------- WRITE TO CARD START -----------
-        authorid = sys.argv[2]
-        boardid = sys.argv[3]
-        swimlaneid = sys.argv[4]
-        listid = sys.argv[5]
-        cardtitle = sys.argv[6]
-        carddescription = sys.argv[7]
-        cardtolist = wekanurl + apiboards + boardid + s + l + s + listid + s + cs
-        # Write to card
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        post_data = {'authorId': '{}'.format(authorid), 'title': '{}'.format(cardtitle), 'description': '{}'.format(carddescription), 'swimlaneId': '{}'.format(swimlaneid)}
-        body = requests.post(cardtolist, data=post_data, headers=headers)
-        print(body.text)
-        # ------- WRITE TO CARD END -----------
+    authorid = sys.argv[2]
+    boardid = sys.argv[3]
+    swimlaneid = sys.argv[4]
+    listid = sys.argv[5]
+    cardtitle = sys.argv[6]
+    carddescription = sys.argv[7]
+    cardtolist = wekanurl + apiboards + boardid + s + l + s + listid + s + cs
+    # Write to card
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    post_data = {'authorId': '{}'.format(authorid), 'title': '{}'.format(cardtitle), 'description': '{}'.format(carddescription), 'swimlaneId': '{}'.format(swimlaneid)}
+    body = requests.post(cardtolist, data=post_data, headers=headers)
+    print(body.text)
+    return body.text
 
-if arguments == 6:
 
-    if sys.argv[1] == 'editcard':
 
-        # ------- LIST OF BOARD START -----------
-        boardid = sys.argv[2]
-        listid = sys.argv[3]
-        cardid = sys.argv[4]
-        newcardtitle = sys.argv[5]
-        newcarddescription = sys.argv[6]
-        edcard = wekanurl + apiboards + boardid + s + l + s + listid + s + cs + s + cardid
-        print(edcard)
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        put_data = {'title': '{}'.format(newcardtitle), 'description': '{}'.format(newcarddescription)}
-        body = requests.put(edcard, data=put_data, headers=headers)
-        print("=== EDIT CARD ===\n")
-        body = requests.get(edcard, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- LISTS OF BOARD END -----------
+def editcard(userid) :
+    # if arguments == 6:
+    # if sys.argv[1] == 'editcard':
+    boardid = sys.argv[2]
+    listid = sys.argv[3]
+    cardid = sys.argv[4]
+    newcardtitle = sys.argv[5]
+    newcarddescription = sys.argv[6]
+    edcard = wekanurl + apiboards + boardid + s + l + s + listid + s + cs + s + cardid
+    print(edcard)
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    put_data = {'title': '{}'.format(newcardtitle), 'description': '{}'.format(newcarddescription)}
+    body = requests.put(edcard, data=put_data, headers=headers)
+    print("=== EDIT CARD ===\n")
+    body = requests.get(edcard, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-if arguments == 3:
 
-    if sys.argv[1] == 'createlist':
+def createlist(userid):
+    # if arguments == 3:
+    # if sys.argv[1] == 'createlist':
+    boardid = sys.argv[2]
+    listtitle = sys.argv[3]
+    list = wekanurl + apiboards + boardid + s + l
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    post_data = {'title': '{}'.format(listtitle)}
+    body = requests.post(list, data=post_data, headers=headers)
+    print("=== CREATE LIST ===\n")
+    print(body.text)
+    return body.text
 
-        # ------- CREATE LIST START -----------
-        boardid = sys.argv[2]
-        listtitle = sys.argv[3]
-        list = wekanurl + apiboards + boardid + s + l
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        post_data = {'title': '{}'.format(listtitle)}
-        body = requests.post(list, data=post_data, headers=headers)
-        print("=== CREATE LIST ===\n")
-        print(body.text)
-        # ------- CREATE LIST END -----------
 
-    if sys.argv[1] == 'list':
+def list(userid):
+    # if sys.argv[1] == 'list':
+    boardid = sys.argv[2]
+    listid = sys.argv[3]
+    listone = wekanurl + apiboards + boardid + s + l + s + listid
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    print("=== INFO OF ONE LIST ===\n")
+    body = requests.get(listone, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-        # ------- LIST OF BOARD START -----------
-        boardid = sys.argv[2]
-        listid = sys.argv[3]
-        listone = wekanurl + apiboards + boardid + s + l + s + listid
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        print("=== INFO OF ONE LIST ===\n")
-        body = requests.get(listone, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- LISTS OF BOARD END -----------
 
-if arguments == 2:
-
-    # ------- BOARDS LIST START -----------
-    userid = sys.argv[2]
+def boards(userid):
+    # if arguments == 2:
+    # userid = sys.argv[2]
+    print(userid)
     boards = users + s + userid + s + bs
-    if sys.argv[1] == 'boards':
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        #post_data = {'userId': '{}'.format(userid)}
-        body = requests.get(boards, headers=headers)
-        print("=== BOARDS ===\n")
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-    # ------- BOARDS LIST END -----------
-    if sys.argv[1] == 'board':
+    # if sys.argv[1] == 'boards':
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    #post_data = {'userId': '{}'.format(userid)}
+    body = requests.get(boards, headers=headers)
+    print("=== BOARDS ===\n")
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-        # ------- BOARD INFO START -----------
-        boardid = sys.argv[2]
-        board = wekanurl + apiboards + boardid
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        body = requests.get(board, headers=headers)
-        print("=== BOARD ===\n")
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- BOARD INFO END -----------
 
-    if sys.argv[1] == 'swimlanes':
-        boardid = sys.argv[2]
-        swimlanes = wekanurl + apiboards + boardid + s + sws
-        # ------- SWIMLANES OF BOARD START -----------
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        print("=== SWIMLANES ===\n")
-        body = requests.get(swimlanes, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- SWIMLANES OF BOARD END -----------
+def board(userid):
+    # if sys.argv[1] == 'board':
+    boardid = sys.argv[2]
+    board = wekanurl + apiboards + boardid
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    body = requests.get(board, headers=headers)
+    print("=== BOARD ===\n")
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-    if sys.argv[1] == 'lists':
 
-        # ------- LISTS OF BOARD START -----------
-        boardid = sys.argv[2]
-        lists = wekanurl + apiboards + boardid + s + l
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        print("=== LISTS ===\n")
-        body = requests.get(lists, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- LISTS OF BOARD END -----------
+def swilanes(userid):
+    # if sys.argv[1] == 'swimlanes':
+    boardid = sys.argv[2]
+    swimlanes = wekanurl + apiboards + boardid + s + sws
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    print("=== SWIMLANES ===\n")
+    body = requests.get(swimlanes, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-    if sys.argv[1] == 'listattachments':
 
-        # ------- LISTS OF ATTACHMENTS START -----------
-        boardid = sys.argv[2]
-        listattachments = wekanurl + apiboards + boardid + s + ats
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        print("=== LIST OF ATTACHMENTS ===\n")
-        body = requests.get(listattachments, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- LISTS OF ATTACHMENTS END -----------
+def lists(userid):
+    # if sys.argv[1] == 'lists':
+    boardid = sys.argv[2]
+    lists = wekanurl + apiboards + boardid + s + l
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    print("=== LISTS ===\n")
+    body = requests.get(lists, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-if arguments == 1:
 
-    if sys.argv[1] == 'users':
+def listattachments(userid):
+    # if sys.argv[1] == 'listattachments':
+    boardid = sys.argv[2]
+    listattachments = wekanurl + apiboards + boardid + s + ats
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    print("=== LIST OF ATTACHMENTS ===\n")
+    body = requests.get(listattachments, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
 
-        # ------- LIST OF USERS START -----------
-        headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
-        print(users)
-        print("=== USERS ===\n")
-        body = requests.get(users, headers=headers)
-        data2 = body.text.replace('}',"}\n")
-        print(data2)
-        # ------- LIST OF USERS END -----------
 
+def users():
+    # if arguments == 1:
+    # if sys.argv[1] == 'users':
+    headers = {'Accept': 'application/json', 'Authorization': 'Bearer {}'.format(apikey)}
+    print(users)
+    print("=== USERS ===\n")
+    body = requests.get(users, headers=headers)
+    data2 = body.text.replace('}',"}\n")
+    print(data2)
+    return data2
+
+
+
+if req.status_code == 200:
+    boards(userid)
+else:
+    print ('Boo!')
