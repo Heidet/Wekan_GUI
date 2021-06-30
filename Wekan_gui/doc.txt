@@ -1,0 +1,44 @@
+# ------- SETTINGS END -------------
+
+"""
+EXAMPLE:
+python3 api.py
+OR:
+chmod +x api.py
+./api.py
+=== Wekan API Python CLI: Shows IDs for addcard ===
+AUTHORID is USERID that writes card.
+Syntax:
+  python3 api.py users               # All users
+  python3 api.py boards USERID       # Boards of USERID
+  python3 api.py board BOARDID       # Info of BOARDID
+  python3 api.py swimlanes BOARDID   # Swimlanes of BOARDID
+  python3 api.py lists BOARDID       # Lists of BOARDID
+  python3 api.py list BOARDID LISTID # Info of LISTID
+  python3 api.py createlist BOARDID LISTTITLE # Create list
+  python3 api.py addcard AUTHORID BOARDID SWIMLANEID LISTID CARDTITLE CARDDESCRIPTION
+  python3 api.py editcard BOARDID LISTID CARDID NEWCARDTITLE NEWCARDDESCRIPTION
+  python3 api.py listattachments BOARDID # List attachments
+  python3 api.py attachmentjson BOARDID ATTACHMENTID # One attachment as JSON base64
+  python3 api.py attachmentbinary BOARDID ATTACHMENTID # One attachment as binary file
+=== USERS ===
+python3 api.py users
+=> abcd1234
+=== BOARDS ===
+python3 api.py boards abcd1234
+=== SWIMLANES ===
+python3 api.py swimlanes dYZ
+[{"_id":"Jiv","title":"Default"}
+]
+=== LISTS ===
+python3 api.py lists dYZ
+[]
+There is no lists, so create a list:
+=== CREATE LIST ===
+python3 api.py createlist dYZ 'Test'
+{"_id":"7Kp"}
+#  python3 api.py addcard AUTHORID BOARDID SWIMLANEID LISTID CARDTITLE CARDDESCRIPTION
+python3 api.py addcard ppg dYZ Jiv 7Kp 'Test card' 'Test description'
+=== LIST ATTACHMENTS WITH DOWNLOAD URLs ====
+python3 api.py listattachments BOARDID
+"""
