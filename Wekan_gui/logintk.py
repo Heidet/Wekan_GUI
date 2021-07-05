@@ -7,74 +7,87 @@ from functools import partial
 import ssl
 import json
 import requests
-
+from wekanapi import WekanApi
 
 ssl._create_default_https_context = ssl._create_unverified_context
 arguments = len(sys.argv) - 1
 
+# login = logintk.Login(username, password)
+# req, userid, apikey = login.connect(username, password)
+# # print('req=>',req)
+# # print('userid=>',userid)
+# # print('apikey=>',apikey)
+
+# api_url = "http://localhost:8080/"
+# api = WekanApi(api_url, {"username": username, "password": password}, )
+
+# boards = api.get_user_boards()
+
+# for board in boards:
+#     print(board.pprint())
+
 
 class Login:
-	def __init__(self,username,password):
-		self.username = username
-		self.password = password
+	def __init__(self):
+		self.username = ''
+		self.password = ''
 
-	def login(self):
+	def login(self,username,password):
 		main_screen = Tk()   # create a GUI window 
 		main_screen.geometry("300x250") # set the configuration of GUI window 
 		main_screen.title("Connexion au compte")
 		Label(main_screen, text="Veuillez entrer les détails ci-dessous pour vous connecter").pack()
 		Label(main_screen, text="").pack()
 	
-		username = StringVar()
-		password = StringVar()
+		self.username = StringVar()
+		self.password = StringVar()
 	
 	
 		Label(main_screen, text="Username * ").pack()
-		username_login_entry = Entry(main_screen, textvariable=username)
+		username_login_entry = Entry(main_screen, textvariable=self.username)
 		username_login_entry.pack()
 		Label(main_screen, text="").pack()
 		Label(main_screen, text="Password * ").pack()
-		password__login_entry = Entry(main_screen, textvariable=password, show= '*')
+		password__login_entry = Entry(main_screen, textvariable=self.password, show= '*')
 		password__login_entry.pack()
 		Label(main_screen, text="").pack()
 		Button(main_screen, text="Login", width=10, height=1).pack()
 		main_screen.mainloop()
-		return username, password
+		return self.username, self.password
 
 
-	def api_url(self):
+	# def api_url(self):
 
-		wekanurl = 'http://localhost:8080/'
+	# 	wekanurl = 'http://localhost:8080/'
 
-		# ------- API URL GENERATION START -----------
+	# 	# ------- API URL GENERATION START -----------
 
-		loginurl = 'users/login'
-		wekanloginurl = wekanurl + loginurl
-		apiboards = 'api/boards/'
-		apiattachments = 'api/attachments/'
-		apiusers = 'api/users'
-		e = 'export'
-		s = '/'
-		l = 'lists'
-		sw = 'swimlane'
-		sws = 'swimlanes'
-		cs = 'cards'
-		bs = 'boards'
-		atl = 'attachmentslist'
-		at = 'attachment'
-		ats = 'attachments'
-		users = wekanurl + apiusers
+	# 	loginurl = 'users/login'
+	# 	wekanloginurl = wekanurl + loginurl
+	# 	apiboards = 'api/boards/'
+	# 	apiattachments = 'api/attachments/'
+	# 	apiusers = 'api/users'
+	# 	e = 'export'
+	# 	s = '/'
+	# 	l = 'lists'
+	# 	sw = 'swimlane'
+	# 	sws = 'swimlanes'
+	# 	cs = 'cards'
+	# 	bs = 'boards'
+	# 	atl = 'attachmentslist'
+	# 	at = 'attachment'
+	# 	ats = 'attachments'
+	# 	users = wekanurl + apiusers
 
-		return wekanloginurl
+	# 	return wekanloginurl
 
 
-	def connect(self, username, password):
+	def connect(self, username, password, apiurl):
 		# ------- LOGIN TOKEN START -----------
 		username, password = self.login()
 
 		username = username.get()
 		password = password.get()
-		wekanloginurl = self.api_url()
 
 		data = {"username": username, "password": password}
 		req = requests.post(wekanloginurl, data=data,  verify=False)
