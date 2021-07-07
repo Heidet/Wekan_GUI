@@ -17,6 +17,7 @@ import wekanapi
 import logintk
 import board
 
+board_data = ""
 username = "antoine"
 password = "ntri33"
 api_url = "http://localhost:8080/"
@@ -46,126 +47,209 @@ boards = api.get_user_boards()
 # 		for board in boards:
 # 			print('board.pprint() =>',board.pprint())
 
-class GetAllBoards:
-	def __init__(self):
-		self.api = api
-		self.tk = tk.Tk()
-		self.tree = ttk.Treeview(self.tk)
-		self.id = id
+tk = tk.Tk()
+tree = ttk.Treeview(tk)
+class GetAllBoards():
+	# def __init__(self):
+		# self.api = api
+		# self.tk = tk.Tk()
+		# self.tree = ttk.Treeview(self.tk)
 
-	def item_selected(self, event):
-		for selected_item in self.tree.selection():
-			item = self.tree.item(selected_item)
+	def board_selected(self, event):
+		for selected_item in tree.selection():
+			item = tree.item(selected_item)
 			record = item['values']
-			showinfo(title='Information',
-			message=','.join(record))
-			print('record[0] =>',record[0])
-			print('record[1] =>',record[1])
-			print(self.api)
+
 			board_data={
-				"_id": record[0],
-				"title": record[1],
+				"title": record[0],
+				"_id": record[1],
 				}
-			titleboard = record[1]
-			# print(type(self.id),self.id)
+
 			listcards = models.Board(api, board_data)
 			listcards.get_cardslists()
-			listcards.get_swimlanes()
-			# self.tk.destroy()
-			# getboard = GetBoard()
+			viewlist = GetBoardListCard()
+			viewlist.view_lists(board_data)
 
-		# return record
-		# print(boardid)
-		# return boardid
+		
 
 	def treeview_boards(self):   
-		# tk = tk.Tk() 
-		# tree = ttk.Treeview(tk)
-		self.tk.title('Liste Dashboards')
-		self.tk.geometry('300x250')
-		self.tk['bg']='#2980b9'
+		tk.title('Liste Dashboards')
+		tk.geometry('300x250')
+		tk['bg']='#2980b9'
 
-		self.tree['columns']=('Rank', 'Name')
+		treeScroll = ttk.Scrollbar(tree)
+		treeScroll.configure(command=tree)
+		tree.configure(yscrollcommand=treeScroll.set)
 
-		self.tree.column('#0', width=0, stretch=NO) 
-		self.tree.column('Rank', anchor=CENTER, width=120)
-		self.tree.column('Name', anchor=CENTER, width=120)
-		self.tree.heading('#0', text='', anchor=CENTER)
-		self.tree.heading('Rank', text='Id Dashboard', anchor=CENTER)
-		self.tree.heading('Name', text='Nom Dashboard', anchor=CENTER)
-		self.tree.bind('<<TreeviewSelect>>', self.item_selected)
-		self.tree.grid(row=0, column=0, sticky='nsew')
+		tree['columns']=('Name')
+
+		tree.column('#0', width=0, stretch=NO) 
+		tree.column('Name', anchor=CENTER, width=240)
+		tree.heading('#0', text='', anchor=CENTER)
+		tree.heading('Name', text='Nom Dashboard', anchor=CENTER)
+		tree.bind('<<TreeviewSelect>>', self.board_selected)
+		tree.grid(row=0, column=0, sticky='nsew')
 		data = []
-		#print(boards.pprint())
-		# print(listboard)
-		# for i in listboard:
-		# 	print(listboard)
+
+
 		for board in boards:
-			print('board.pprint() =>',board.idandtitle())
 			name = board.idandtitle()[0]
 			idboard = board.idandtitle()[1]
-			data.append((f' {idboard}', f'{name}'))
+			data.append((f' {name}', f'{idboard}'))
 		for i in data:
-			self.tree.insert('', "end", values=i)
+			tree.insert('', "end", values=i)
 		
-	# # print('board=>',board)
-	# 		print('board.pprint() =>',board.pprint())
-	# 	return dashboards
-		# self.tree.insert('', "end", values=listboard)
-		# for key in listboard:
-		# 	print(listboard)
-		# 	# name = key[0]
-			# idboard = key[1]
-			# data.append((f' {idboard}', f'{name}'))
-			# self.tree.insert('', "end", values=self.boardlist)
-			# data.append(self.boardlist)  
-			# print(data)
-		# for i in listboard:
-		# 	print(i)
-		# 	self.tree.insert('', "end", values=i)
-			# self.tree.insert('', "end", values=i)
-		# self.tree.insert('', "end", values=boardlist)
+		tree.pack()
+		tk.mainloop()
 
-		# scrollbar = ttk.Scrollbar(tk, orient=tk.VERTICAL, command=tree.yview)
-		# tree.configure(yscroll=scrollbar.set)
-		self.tree.pack()
-		self.tk.mainloop()
 
 
 class GetBoardListCard(GetAllBoards): 
-	def __init__(self):
-		self.api = api
-		self.tk = tk.Tk()
-		self.tree = ttk.Treeview(self.tk)
-	# def __init__(self, api):
+	# def __init__(self):
 	# 	self.api = api
 	# 	self.tk = tk.Tk()
 	# 	self.tree = ttk.Treeview(self.tk)
 
-	def view_board(self):   
+	def lists_selected(self, event):
+		for lists_selected in tree.selection():
+			item = tree.item(lists_selected)
+			record = item['values']
+			showinfo(title='Information',
+			message=','.join(record))
+			# print('record[0] =>',record[0])
+			# print('record[1] =>',record[1])
+			# print(self.api)
+
+			# print(type(self.id),self.id)
+			# listcards.get_swimlanes()
+			# # self.tk.destroy()
+			# listcards = models.Board(api, board_data)
+			# listcards.get_cardslists()
+			# GetBoardListCard.view_board(self, board_data)
+
+	def view_lists(self, board_data):  
+		# print('api=>',self.api)
+		# print('tk=>',self.tk)
+		# print('tree=>',self.tree)
+		for i in tree.get_children():
+			# print(i)
+			tree.delete(i)
+
+		tk.title('Liste')
+		tk.geometry('300x250')
+		tk['bg']='#2980b9'
+
+		
+		treeScroll = ttk.Scrollbar(tree)		
+		treeScroll.configure(command=tree)
+		tree.configure(yscrollcommand=treeScroll.set)
+
+		tree['columns']=('lists')
+
+		tree.column('#0', width=0, stretch=NO) 
+		tree.column('lists', anchor=CENTER, width=240)
+		tree.heading('#0', text='', anchor=CENTER)
+		tree.heading('lists', text='Listes', anchor=CENTER)
+		tree.bind('<<TreeviewSelect>>', self.lists_selected)
+		tree.grid(row=0, column=0, sticky='nsew')
+
+		listcards = models.Board(api, board_data)
+		cardslists_data = listcards.get_cardslists()
+
+		data = []
+
+		for i in cardslists_data: 
+			print('listcards_id =>', i["_id"])
+			print('listcards_title =>', i["title"])
+			id = i["_id"]
+			title = i["title"]
+			data.append((f' {title}', f'{id}'))
+
+		for i in data:
+			tree.insert('', "end", values=i)
+
+		tree.pack()
+		tk.mainloop()
+		# for board in cardslists_data:
+		# 	name = board.idandtitle()[0]
+		# 	idboard = board.idandtitle()[1]
+		# 	data.append((f' {name}', f'{idboard}'))
+		# for i in data:
+		# 	self.tree.insert('', "end", values=i)
+		
+		# self.tree.pack()
+		# self.tk.mainloop()
+		# for j in range(total_columns):
+		# 	print('j=>',j)
+		# 	toto = j
+		# 	self.tree['columns']=(toto)
+		# 	self.tree.column('#0', width=0, stretch=NO) 
+		# 	self.tree.column(j, anchor=CENTER, width=120)
+		# 	self.tree.heading(j, text='')
+
+			# 	print('i=>',i['title'])
+			# 	titlelist = i['title']
+			# 	total_columns = len(listcards)
+			# 	print(total_columns)
+				# self.tree['columns']=()
+
+				# self.entry.insert(total_columns, 'end')
+
+		# 	print(listcards)
+		# 	# it = iter(i.values())
+		# 	# id, title = next(it), next(it)   
+		# 	# id = id
+		# 	# title = title   
+		# 	# print('id =>',id) 
+		# 	# print('title => ',title) 
+		# 	# self.tree['columns']=(title)
+		# 	total_columns = len(listcards)
+		# 	# total_columns = len(listcards)
+		# 	# print(total_rows)
+		# 	print(total_columns)
+
+			# total_columns = len(lst[0])
+
+			# for j in range(total_columns):
+			# 	print('j',j)
+			# 	# self.tree['columns']= j
+			# 	self.tree = Entry(self.tk, width=20, fg='blue',
+			# 				font=('Arial',16,'bold'))
+				# /self.tree.grid(column=total_columns)
+				# self.tree.grid(row=0, column=2, sticky='nsew')
+
+
+				# self.e.insert(END, title)
+		# self.tree.pack()
+
+		# print('GetBoardListCard() , view_board BOARDDATA=>',board_data["_id"])
+		# self.tree.heading('Rank', text='tata', anchor=CENTER)
+		# self.tree.heading('Name', text='Nom Dashboard', anchor=CENTER)
+		# self.tree.bind('<<TreeviewSelect>>', self.item_selected)
+			# print(i)
 		# tk = tk.Tk() 
 		# tree = ttk.Treeview(tk)
 			
 		# tk = Tk() 
 		# tree = ttk.Treeview(tk)
-		self.tk.title('Liste Dashboards')
-		self.tk.geometry('300x250')
-		self.tk['bg']='#2980b9'
+		# self.tk.title('Liste Dashboards')
+		# self.tk.geometry('300x250')
+		# self.tk['bg']='#2980b9'
 
-		self.tree['columns']=('Rank', 'Name')
+		# self.tree['columns']=('Rank', 'Name')
 
-		self.tree.column('#0', width=0) 
-		self.tree.column('Rank', anchor=CENTER, width=120)
-		self.tree.column('Name', anchor=CENTER, width=120)
-		self.tree.heading('#0', text='', anchor=CENTER)
-		self.tree.heading('Rank', text='Id Dashboard', anchor=CENTER)
-		self.tree.heading('Name', text='Nom Dashboard', anchor=CENTER)
-		# tree.bind('<<TreeviewSelect>>')
-		self.tree.grid(row=0, column=0, sticky='nsew')
+		# self.tree.column('#0', width=0) 
+		# self.tree.column('Rank', anchor=CENTER, width=120)
+		# self.tree.column('Name', anchor=CENTER, width=120)
+		# self.tree.heading('#0', text='', anchor=CENTER)
+		# self.tree.heading('Rank', text='Id Dashboard', anchor=CENTER)
+		# self.tree.heading('Name', text='Nom Dashboard', anchor=CENTER)
+		# # tree.bind('<<TreeviewSelect>>')
+		# self.tree.grid(row=0, column=0, sticky='nsew')
 		
-		boards = boards.get_user_boards()
-		for board in boards:
-			print('board.pprint() =>',board.pprint())
+		# boards = boards.get_user_boards()
+		# for board in boards:
+		# 	print('board.pprint() =>',board.pprint())
 	
 		# getallboard = GetAllBoards
 		# record = getallboard.item_selected
@@ -206,10 +290,8 @@ class GetBoardListCard(GetAllBoards):
 
 		# scrollbar = ttk.Scrollbar(tk, orient=tk.VERTICAL, command=tree.yview)
 		# tree.configure(yscroll=scrollbar.set)
-		self.tree.pack()
-		self.tk.mainloop()
-
-
+		# self.tree.pack()
+		# self.tk.mainloop()
 
 
 tkhome = GetAllBoards()

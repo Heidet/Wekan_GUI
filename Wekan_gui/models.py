@@ -9,10 +9,13 @@ class Board():
         self.title = board_data["title"]
 
     def get_cardslists(self, filter=''):
+        print(self.data)
+
         self.id = self.id.replace(" ", "")
         cardslists_data = self.api.api_call("/api/boards/{}/lists".format(self.id))
         print('cardslists_data =>',cardslists_data)
-        return [Cardslist(self.api, self, cardslist_data) for cardslist_data in cardslists_data if filter in cardslist_data["title"]]
+        return cardslists_data
+        # return [Cardslist(self.api, self, cardslist_data) for cardslist_data in cardslists_data if filter in cardslist_data["title"]]
 
     def get_swimlanes(self, filter=''):
         swimlanes_data = self.api.api_call("/api/boards/{}/swimlanes".format(self.id))
