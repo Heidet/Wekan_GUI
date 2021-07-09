@@ -8,14 +8,14 @@ class WekanApi:
             api_response = self.session.get(
                 "{}{}".format(self.api_url, url),
                 headers={"Authorization": "Bearer {}".format(self.token)},
-                proxies=self.proxies
+                proxies=self.proxies,
             )
         else:
             api_response = self.session.post(
                 "{}{}".format(self.api_url, url),
                 data=data,
                 headers={"Authorization": "Bearer {}".format(self.token)} if authed else {},
-                proxies=self.proxies
+                proxies=self.proxies, 
             )
         return api_response.json()
 
@@ -31,7 +31,5 @@ class WekanApi:
 
     def get_user_boards(self, filter=''):
         boards_data = self.api_call("/api/users/{}/boards".format(self.user_id))
-        # print('filter => ', filter)
-        # print('boards_data => ',boards_data)
         return [Board(self, board_data) for board_data in boards_data if filter in board_data["title"]]
 

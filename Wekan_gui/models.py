@@ -9,11 +9,8 @@ class Board():
         self.title = board_data["title"]
 
     def get_cardslists(self, filter=''):
-        print(self.data)
-
         self.id = self.id.replace(" ", "")
         cardslists_data = self.api.api_call("/api/boards/{}/lists".format(self.id))
-        print('cardslists_data =>',cardslists_data)
         return cardslists_data
         # return [Cardslist(self.api, self, cardslist_data) for cardslist_data in cardslists_data if filter in cardslist_data["title"]]
 
@@ -57,16 +54,22 @@ class Swinlane:
 
 
 class Cardslist:
-    def __init__(self, api, board, cardslist_data):
+    def __init__(self, api, boardid, cardslist_data):
         self.api = api
-        self.board = board
+        self.boardid = boardid
         self.data = cardslist_data
         self.id = cardslist_data["_id"]
         self.title = cardslist_data["title"]
 
     def get_cards(self, id=''):
-        cards_data = self.api.api_call("/api/boards/{}/lists/{}/cards".format(self.board.id, self.id))
-        return [Card(self.api, self, card_data) for card_data in cards_data if id in card_data['_id']]
+        # print('self.DATA =>', self.data)
+        # print('self.id =>', self.id)
+
+        cards_data = self.api.api_call("/api/boards/{}/lists/{}/cards".format(self.boardid, self.id))
+        # print('self.data =>', self.data)
+        # print('cards_data =>',cards_data)
+        return cards_data
+        # return [Card(self.api, self, card_data) for card_data in cards_data if id in card_data['_id']]
 
     def pprint(self, indent=0):
         pprint = "{}- {}".format("  " * indent, self.title)
