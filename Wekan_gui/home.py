@@ -156,14 +156,14 @@ class GetCardsOfList():
 	def view_cards(self, cardslist_data, cardsdata):  
 		tree.delete(*tree.get_children())
 		tree.destroy()
-		root.geometry('300x350')
+		root.geometry('400x350')
 		titlelistcard = cardslist_data['title']
 		Label(root, text=titlelistcard, font=('Helvetica bold',20), fg= "white",bg="#2980b9").pack(pady=20)
 		# frame = Frame(root,  width=100, height=100)
 		# frame.pack(fill=None, expand=False)
 
 
-		frame = tk.Frame(root, bg='#ffffff', width=250, height=240)
+		frame = tk.Frame(root, bg='#ffffff', width=350, height=240)
 		frame.pack()
 		frame.pack_propagate(0)
 		frame.columnconfigure(index=0, weight=1)
@@ -178,9 +178,8 @@ class GetCardsOfList():
 
 		for item in cardsdata:
 			title = item['title']
-			button = TkinterCustomButton(master=frame, text=title,command=functools.partial(func,item))
+			button = TkinterCustomButton(master=frame, width=250, height=80, text=title,command=functools.partial(func,item))
 			#  width=30, height=2,  bg="#2980b9", 
-
 			button.pack(pady=10)
 
 
