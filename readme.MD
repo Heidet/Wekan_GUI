@@ -20,40 +20,31 @@
 ## Usage
 
 ```sh
-<%= usage %>
+<%= usage
 ```
-<% } -%>
-<% if (testCommand) { -%>
 
 ## Run tests
 
 ```sh
 <%= testCommand %>
 ```
-<% } -%>
-<% if (authorName || authorTwitterUsername || authorGithubUsername) { -%>
+
 
 ## Author
-<% if (authorName) { %>
-👤 **<%= authorName %>**
-<% } %>
-<% if (authorGithubUsername) { -%>
-* GitHub: [@<%= authorGithubUsername %>](https://github.com/heidet<%= authorGithubUsername %>)
-<% } -%>
-<% if (authorLinkedInUsername) { -%>
-* LinkedIn: [@<%= authorLinkedInUsername %>](https://linkedin.com/in/antoine-heidet/<%= authorLinkedInUsername %>)
-<% } -%>
-<% } -%>
-<% if (issuesUrl) { -%>
+
+👤
+
+* GitHub: https://github.com/heidet
+
+* LinkedIn: https://linkedin.com/in/antoine-heidet/
+
 
 
 ## 📝 License
 
-<% if (authorName && authorGithubUsername) { -%>
-Copyright © <%= currentYear %> [<%= authorName %>](https://github.com/heidet<%= authorGithubUsername %>).<br />
-<% } -%>
-This project is [<%= licenseName %>]heidet(<%= licenseUrl %>) licensed.
-<% } -%>
+Copyright © https://github.com/heidet .<br />
+
+This project is heidet licensed.
 
 ***
 <%- include('footer.md'); -%>
