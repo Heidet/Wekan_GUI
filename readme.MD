@@ -9,26 +9,6 @@
 <% } -%>
 <% if (installCommand) { -%>
 
-## Install
-
-```sh
-<%= installCommand %>
-```
-<% } -%>
-<% if (usage) { -%>
-
-## Usage
-
-```sh
-<%= usage
-```
-
-## Run tests
-
-```sh
-<%= testCommand %>
-```
-
 
 ## Author
 
